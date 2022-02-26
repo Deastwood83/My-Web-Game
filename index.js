@@ -1,0 +1,1 @@
+const player1 = player1Ship(100, 110)
