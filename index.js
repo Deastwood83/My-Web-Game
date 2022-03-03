@@ -5,29 +5,27 @@ canvas.width = 1885
 canvas.height = 950
 
 class Projectile {
-    constructor(position, velocity){
+    constructor({position, velocity}){
         this.velocity = velocity
         this.position = position
-        //credit from chris courses youtube on how to draw projectile on canvas
-        this.radius = 3
+
+        const image1 = new Image()
+        image1.src = './assets/Explosion_1_006.png'
+    
+        this.image = image1
+        this.width = 100
+        this.height = 100
+
     }
 
     draw(){
-        //credit from chris courses youtube on how to draw projectile on canvas
-        //beginPath function needed to call arc function
-        c.beginPath()
-        //arc function used to draw a circle on the canvas
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        //fillStyle to change the color, fill to add the color
-        c.fillStyle = 'Yellow'
-        c.fill()
-        c.closePath()
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
-        this.draw()
-        this.position.x += this.velocity.x
-        this.position.y += this.position.y
+            this.draw()
+            this.position.x += this.velocity.x
+            this.position.y += this.velocity.y
     }
 }
 
@@ -70,7 +68,7 @@ class Player {
 
 const firstPlayer = new Player(150, 350, './assets/player 1 ship.png')
 const secondPlayer = new Player(1500, 350, './assets/player 2 ship.png')
-const projectiles = [new Projectile({})]
+const projectiles = []
 
 
 //create animate function to load image fast 
@@ -80,10 +78,9 @@ function animate(){
     c.fillRect(0, 0, canvas.width, canvas.height)
     //requestAnimationFrame to repeatidly call the animate function
     window.requestAnimationFrame(animate)
-    firstPlayer.draw()
     firstPlayer.update()
-    secondPlayer.draw()
     secondPlayer.update()
+    //use forEach on the projectiles array to keep adding projectiles when needed
     projectiles.forEach(Projectile => {
         Projectile.update()
     })
@@ -105,6 +102,19 @@ addEventListener('keydown', ({key}) =>{
         case 'w':
             firstPlayer.velocity.y = -5
             break
+        case ' ':
+            projectiles.push(new Projectile({
+                position: {
+                    //credit from chris courses on how to fire projectiles from player position
+                    x:firstPlayer.position.x + firstPlayer.height / 2,
+                    y:firstPlayer.position.y
+                },
+                velocity: {
+                    x:3,
+                    y:0
+                }
+            }))
+
     }
 })
 
