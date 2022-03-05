@@ -50,10 +50,12 @@ class Player {
         this.image = image
         this.width = 200
         this.height = 200
+        this.opacity = 1
     }
 
     //draw is a canvas function used to add elements to the canvas
     draw() {
+        c.globalAlpha = this.opacity
         c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     }
 
@@ -70,10 +72,18 @@ class Player {
 const firstPlayer = new Player(150, 350, './assets/player 1 ship.png')
 const secondPlayer = new Player(1500, 350, './assets/player 2 ship.png')
 const projectiles = []
+let game = {
+    over1: false,
+    over2: false
+
+}
+
 
 
 //create animate function to load image fast 
 function animate(){
+    if(game.over1 || game.over2 === true) return
+    else{
     //fillStyle and fillRect allow modification of canvas css
     c.fillStyle= 'black'
     c.fillRect(0, 0, canvas.width, canvas.height)
@@ -86,7 +96,7 @@ function animate(){
         Projectile.update()
     })
 
-    projectiles.forEach(projectile => {
+    projectiles.forEach((projectile, index)=> {
         if (projectile.position.x > firstPlayer.position.x + firstPlayer.width / 1.5 ||
             projectile.position.x + projectile.width / 1.5 < firstPlayer.position.x ||
             projectile.position.y > firstPlayer.position.y + firstPlayer.height / 1.5 ||
@@ -95,11 +105,17 @@ function animate(){
             }
         else {
             console.log('collided')
-            firstPlayer.splice
+            projectiles.splice(index, 1)
+            firstPlayer.opacity = 0
+            setTimeout(function () {
+                game.over1 = true
+            }, 50)
+            
         }
+    
     })
 
-    projectiles.forEach(projectile => {
+    projectiles.forEach((projectile, index) => {
         if (projectile.position.x > secondPlayer.position.x + secondPlayer.width / 1.5 ||
             projectile.position.x + projectile.width / 1.5 < secondPlayer.position.x ||
             projectile.position.y > secondPlayer.position.y + secondPlayer.height / 1.5 ||
@@ -108,15 +124,30 @@ function animate(){
             }
         else {
             console.log('collided')
-            secondPlayer.splice
+            projectiles.splice(index, 1)
+            secondPlayer.opacity = 0
+            setTimeout(function () {
+                game.over2 = true
+            }, 50)
         }
     })
-
-}
+}}
 animate()
 
-//switch case for cleaner code 
+    if(game.over1 === true){
+        c.fillStyle = 'white';
+        c.font = '40px Helvetica';
+        c.fillText('PLAYER 2 WINS', 20, 50)
+    }
+    else if(game.over2 === true){
+        c.fillStyle = 'white';
+        c.font = '40px Helvetica';
+        c.fillText('PLAYER 2 WINS', 20, 50)
+    }
+
+    //switch case for cleaner code 
 addEventListener('keydown', ({key}) =>{
+    if(game.over1 || game.over2 === true) return
     switch (key) {
         case 'a':
             firstPlayer.velocity.x = -5
@@ -164,6 +195,7 @@ addEventListener('keyup', ({key}) =>{
 })
 
 addEventListener('keydown', ({key}) =>{
+    if(game.over1 || game.over2 === true) return
     switch (key) {
         case '4':
             secondPlayer.velocity.x = -5
