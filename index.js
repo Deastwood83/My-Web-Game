@@ -30,6 +30,7 @@ class Projectile {
 }
 
 
+
 class Player {
     constructor(xStart, yStart, img) {
         //add x and y position for where the player starts
@@ -84,6 +85,33 @@ function animate(){
     projectiles.forEach(Projectile => {
         Projectile.update()
     })
+
+    projectiles.forEach(projectile => {
+        if (projectile.position.x > firstPlayer.position.x + firstPlayer.width / 1.5 ||
+            projectile.position.x + projectile.width / 1.5 < firstPlayer.position.x ||
+            projectile.position.y > firstPlayer.position.y + firstPlayer.height / 1.5 ||
+            projectile.position.y + projectile.height / 1.5 < firstPlayer.position.y) {
+            //no collide
+            }
+        else {
+            console.log('collided')
+            firstPlayer.splice
+        }
+    })
+
+    projectiles.forEach(projectile => {
+        if (projectile.position.x > secondPlayer.position.x + secondPlayer.width / 1.5 ||
+            projectile.position.x + projectile.width / 1.5 < secondPlayer.position.x ||
+            projectile.position.y > secondPlayer.position.y + secondPlayer.height / 1.5 ||
+            projectile.position.y + projectile.height / 1.5 < secondPlayer.position.y) {
+            //no collide
+            }
+        else {
+            console.log('collided')
+            secondPlayer.splice
+        }
+    })
+
 }
 animate()
 
@@ -106,7 +134,7 @@ addEventListener('keydown', ({key}) =>{
             projectiles.push(new Projectile({
                 position: {
                     //credit from chris courses on how to fire projectiles from player position
-                    x:firstPlayer.position.x + firstPlayer.height / 2,
+                    x:firstPlayer.position.x + firstPlayer.height / 2 + 100,
                     y:firstPlayer.position.y
                 },
                 velocity: {
@@ -149,7 +177,19 @@ addEventListener('keydown', ({key}) =>{
         case '8':
             secondPlayer.velocity.y = -5
             break
-    }
+        case 'Enter':
+            projectiles.push(new Projectile({
+                position: {
+                    //credit from chris courses on how to fire projectiles from player position
+                    x:secondPlayer.position.x + secondPlayer.height / 2 -200,
+                    y:secondPlayer.position.y
+                },
+                velocity: {
+                    x:-3,
+                    y:0
+                }
+            }))
+     }
 })
 
 addEventListener('keyup', ({key}) =>{
