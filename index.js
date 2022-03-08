@@ -4,7 +4,8 @@ const c = canvas.getContext('2d')
 canvas.width = 1905
 canvas.height = 750
 
-class Projectile {
+//credit to chris courses on how to create and add moving particles on a canvas
+class Particle {
     constructor({ position, velocity, radius, color }) {
         this.velocity = velocity
         this.position = position
@@ -100,35 +101,50 @@ const particles = []
 let game = {
     over1: false,
     over2: false
-
 }
 
+for (let i = 0; i < 100; i++) {
+    particles.push(new Particle({
+        position: {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height
+        },
+        velocity: {
+            x: 0,
+            y: 1
+        },
+        radius: Math.random() * 3,
+        color: 'white'
+    }))
+}
 
 
 //create animate function to repeatidly load images
 function animate() {
     if (game.over1 == true || game.over2 == true) {
         if (game.over1 == true && game.over2 == false) { 
-            var div2 = document.createElement('div')
-            div2.style.width = '940px'
-            div2.style.height = '200px'
-            div2.style.color = 'blue'
-            div2.style.background = "url('./assets/Space-PNG-Pic.gif'"
-            div2.innerHTML = 'Player 2 Wins'
-            div2.style.fontSize = '90px'
-            div2.style.textAlign = 'center'
-            div2.style.position = 'absolute'
-            div2.style.top = '765px'
-            div2.style.left = '973px'
-            document.body.appendChild(div2)
+        var div2 = document.createElement('div')
+        div2.style.width = '940px'
+        div2.style.height = '200px'
+        div2.style.color = 'white'
+        div2.style.background = 'rgba(130, 0, 0, 0.1)'
+        div2.style.opacity = '0.9'
+        div2.innerHTML = 'Player 2 Wins'
+        div2.style.fontSize = '90px'
+        div2.style.textAlign = 'center'
+        div2.style.position = 'absolute'
+        div2.style.top = '765px'
+        div2.style.left = '973px'
+        document.body.appendChild(div2)
         return
         }
         else if(game.over2 == true && game.over1 == false){
-            var div1 = document.createElement('div')
+        var div1 = document.createElement('div')
         div1.style.width = '940px'
         div1.style.height = '200px'
-        div1.style.color = 'red'
-        div1.style.background = "url('./assets/Space-PNG-Pic.gif'"
+        div1.style.color = 'white'
+        div1.style.background = 'rgba(130, 0, 0, 0.1)'
+        div1.style.opacity = '0.9'
         div1.innerHTML = 'Player 1 Wins'
         div1.style.fontSize = '90px'
         div1.style.textAlign = 'center'
@@ -147,6 +163,15 @@ function animate() {
         window.requestAnimationFrame(animate)
         firstPlayer.update()
         secondPlayer.update()
+        particles.forEach((particle)=> {
+            if (particle.position.y - particle.radius >= canvas.height) {
+                particle.position.x = Math.random() * canvas.width
+                particle.position.y = -particle.radius
+            }
+            else{
+            particle.update()
+            }
+        })
         //use forEach on the projectiles array to keep adding projectiles when needed
         projectiles.forEach(Projectile => {
             Projectile.update()
