@@ -21,8 +21,8 @@ for (let i = 0; i < 100; i++) {
             y: Math.random() * canvas.height
         },
         velocity: {
-            x: 0,
-            y: 1
+            x: 1,
+            y: 0
         },
         radius: Math.random() * 3,
         color: 'white'
@@ -77,9 +77,10 @@ function animate() {
         firstPlayer.update()
         secondPlayer.update()
         particles.forEach((particle)=> {
-            if (particle.position.y - particle.radius >= canvas.height) {
-                particle.position.x = Math.random() * canvas.width
-                particle.position.y = -particle.radius
+            //Repositioning already spawned in particles from for loop when they go off the screen
+            if (particle.position.x - particle.radius >= canvas.width) {
+                particle.position.y = Math.random() * canvas.height
+                particle.position.x = -particle.radius
             }
             else{
             particle.update()
@@ -225,3 +226,4 @@ addEventListener('keyup', ({ key }) => {
             break
     }
 })
+
